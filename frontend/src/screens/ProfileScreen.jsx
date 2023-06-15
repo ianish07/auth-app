@@ -1,53 +1,48 @@
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { Form, Button, Row, Col } from "react-bootstrap";
-import FormContainer from "../components/FormContainer";
-import { userRegister, reset } from "../features/auth/authSlice.js";
-import { toast } from "react-toastify";
-import Loader from "../components/Loader.jsx";
+import { useState, useEffect } from 'react';
+import { userUpdate } from "../features/auth/authSlice";
+import { Form, Button } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import FormContainer from '../components/FormContainer';
+import { toast } from 'react-toastify';
+//import Loader from '../components/Loader';
 
-const RegisterScreen = () => {
-    const [name, setName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+const ProfileScreen = () => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
 
-    const {user, isLoading} = useSelector(
-        (state) => state.auth)
-    
-        useEffect(() => {
-            if(user) {
-                navigate('/')
-            }
-            //dispatch(reset())
-        }, [user, navigate])
+    const dispatch = useDispatch();
+    const { user, isLoading } = useSelector((state) => state.auth);
 
-    const submitHandler = async (e) => {
-        e.preventDefault()
+    useEffect(() => {
+        setEmail(user.email);
+        setName(user.name);
+    }, [user.email, user.name]);
 
-        if(password !== confirmPassword) {
-            toast.error('Passwords do not match')
+    function submitHandler(e) {
+        e.preventDefault();
+        if (password !== confirmPassword) {
+        toast.error("Password mismatch");
         }
-        const user = {
-            name,
-            email,
-            password,
-        }
-        
-        dispatch(userRegister(user))
+        const userData = {
+        _id: user._id,
+        name,
+        email,
+        password,
+        };
+        dispatch(userUpdate(userData));
     }
     
-    if(isLoading) {
-        return <Loader />
+    if (isLoading) {
+        return <h2>Loading...</h2>
     }
+    
 
     return (
         <FormContainer>
-          <h1>Register</h1>
+          <h1>Update Profile</h1>
+    
           <Form onSubmit={submitHandler}>
             <Form.Group className='my-2' controlId='name'>
               <Form.Label>Name</Form.Label>
@@ -58,7 +53,6 @@ const RegisterScreen = () => {
                 onChange={(e) => setName(e.target.value)}
               ></Form.Control>
             </Form.Group>
-    
             <Form.Group className='my-2' controlId='email'>
               <Form.Label>Email Address</Form.Label>
               <Form.Control
@@ -68,7 +62,6 @@ const RegisterScreen = () => {
                 onChange={(e) => setEmail(e.target.value)}
               ></Form.Control>
             </Form.Group>
-    
             <Form.Group className='my-2' controlId='password'>
               <Form.Label>Password</Form.Label>
               <Form.Control
@@ -78,6 +71,7 @@ const RegisterScreen = () => {
                 onChange={(e) => setPassword(e.target.value)}
               ></Form.Control>
             </Form.Group>
+    
             <Form.Group className='my-2' controlId='confirmPassword'>
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
@@ -89,18 +83,12 @@ const RegisterScreen = () => {
             </Form.Group>
     
             <Button type='submit' variant='primary' className='mt-3'>
-              Register
+              Update
             </Button>
     
           </Form>
-    
-          <Row className='py-3'>
-            <Col>
-              Already have an account? <Link to='/login'>Login</Link>
-            </Col>
-          </Row>
         </FormContainer>
       );
 }
 
-export default RegisterScreen
+export default ProfileScreen

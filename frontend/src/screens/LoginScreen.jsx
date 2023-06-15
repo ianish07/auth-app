@@ -1,14 +1,44 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector} from 'react-redux'
 import { Form, Button, Row, Col } from "react-bootstrap";
 import FormContainer from "../components/FormContainer";
+import { userLogin, reset } from "../features/auth/authSlice.js";
+import { toast } from 'react-toastify'
+import Loader from "../components/Loader.jsx";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const {user, isLoading, isError, isSuccess, message} = useSelector(
+        (state) => state.auth)
+
+    useEffect(() => {
+        if(isError) {
+            toast.error(message)
+            navigate('/login')
+        }
+        if(isSuccess || user) {
+            navigate('/')
+        }
+        dispatch(reset())
+    }, [user, isSuccess, isError, message, navigate, dispatch])
+
     const submitHandler = async (e) => {
         e.preventDefault()
+        const user = {
+            email,
+            password
+        }
+        dispatch(userLogin(user))
+    }
+
+    if(isLoading) {
+        return <Loader />
     }
     
   return (
@@ -17,7 +47,7 @@ const LoginScreen = () => {
 
         <Form onSubmit={submitHandler}>
             <Form.Group className="my-2" controlId="email">
-                <Form.Label>Email Addresss</Form.Label>
+                <Form.Label>Email Address</Form.Label>
                 <Form.Control 
                     type="email" placeholder="Enter email" value={email}
                     onChange={ (e) => setEmail(e.target.value)}>
