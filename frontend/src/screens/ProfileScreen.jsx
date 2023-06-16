@@ -7,31 +7,34 @@ import { toast } from 'react-toastify';
 //import Loader from '../components/Loader';
 
 const ProfileScreen = () => {
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const dispatch = useDispatch();
+  
     const { user, isLoading } = useSelector((state) => state.auth);
 
     useEffect(() => {
-        setEmail(user.email);
-        setName(user.name);
+      setName(user.name);
+      setEmail(user.email);  
     }, [user.email, user.name]);
 
-    function submitHandler(e) {
+    const submitHandler = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
         toast.error("Password mismatch");
+        } else {
+          const userData = {
+            _id: user._id,
+            name,
+            email,
+            password,
+            }
+            dispatch(userUpdate(userData));
+            toast.success('Profile updated successfully')
         }
-        const userData = {
-        _id: user._id,
-        name,
-        email,
-        password,
-        }
-        dispatch(userUpdate(userData));
     }
     
     if (isLoading) {
