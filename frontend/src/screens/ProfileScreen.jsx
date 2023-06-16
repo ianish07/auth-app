@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { userUpdate } from "../features/auth/authSlice";
+import { userUpdate } from "../features/auth/authSlice.js";
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 //import Loader from '../components/Loader';
 
 const ProfileScreen = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -30,7 +30,7 @@ const ProfileScreen = () => {
         name,
         email,
         password,
-        };
+        }
         dispatch(userUpdate(userData));
     }
     

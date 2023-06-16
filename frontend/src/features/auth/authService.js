@@ -1,12 +1,13 @@
 import axios from 'axios'
 
 const userRegister = async (userData) => {
-    const { data } = await axios.post("/api/users/", userData)
-    if(data) {
-        localStorage.setItem('user', JSON.stringify(data))
+    const { data } = await axios.post("/api/users/", userData);
+
+    if (data) {
+      localStorage.setItem("user", JSON.stringify(data));
     }
-    return data
-}
+    return data;
+  };
 
 const userLogin = async (userData) => {
     const { data } = await axios.post("/api/users/auth", userData)

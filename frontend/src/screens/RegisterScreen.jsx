@@ -16,22 +16,23 @@ const RegisterScreen = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {user, isLoading} = useSelector(
+    const {user, isLoading } = useSelector(
         (state) => state.auth)
     
         useEffect(() => {
             if(user) {
                 navigate('/')
             }
-            //dispatch(reset())
+
         }, [user, navigate])
 
     const submitHandler = async (e) => {
         e.preventDefault()
-
+        
         if(password !== confirmPassword) {
             toast.error('Passwords do not match')
         }
+        
         const user = {
             name,
             email,
